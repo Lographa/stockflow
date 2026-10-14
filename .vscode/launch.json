@@ -1,0 +1,14 @@
+{
+	"configurations": [
+		{
+			"type": "java",
+			"name": "Spring Boot-StockflowApiApplication<stockflow-api>",
+			"request": "launch",
+			"cwd": "${workspaceFolder}/backend",
+			"mainClass": "com.stockFlow.stockflow_api.StockflowApiApplication",
+			"projectName": "stockflow-api",
+			"args": "",
+			"envFile": "${workspaceFolder}/.env"
+		}
+	]
+}

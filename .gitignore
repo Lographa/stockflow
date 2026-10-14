@@ -1,3 +1,6 @@
+# Local secrets (used by .vscode/launch.json envFile)
+.env
+
 # Compiled class file
 *.class
 
