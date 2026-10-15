@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.stockFlow.stockflow_api.products.dto.CreateProductRequest;
 import com.stockFlow.stockflow_api.products.dto.ProductResponse;
 import com.stockFlow.stockflow_api.products.dto.ProductResponseAll;
+import com.stockFlow.stockflow_api.products.exception.ProductNotFoundException;
 import com.stockFlow.stockflow_api.products.mapper.ProductMapper;
 
 import jakarta.transaction.Transactional;
@@ -24,6 +25,12 @@ public class ProductService {
 
     public List<ProductResponseAll> findAll() {
         return productRepository.findAll().stream().map(productMapper::toDtoAll).toList();
+    }
+
+    @Transactional
+    public ProductResponse findById(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        return productMapper.toDto(product);
     }
 
     @Transactional
