@@ -11,6 +11,8 @@ import com.stockFlow.stockflow_api.products.dto.CreateProductRequest;
 import com.stockFlow.stockflow_api.products.dto.ProductResponse;
 import com.stockFlow.stockflow_api.products.dto.ProductResponseAll;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -28,7 +30,7 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ProductResponse postMethodName(@RequestBody CreateProductRequest body) {
+    public ProductResponse postProduct(@Valid @RequestBody CreateProductRequest body) {
         return productService.createProduct(body);
     }
 

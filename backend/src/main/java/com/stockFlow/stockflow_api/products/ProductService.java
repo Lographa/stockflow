@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.stockFlow.stockflow_api.products.dto.CreateProductRequest;
 import com.stockFlow.stockflow_api.products.dto.ProductResponse;
 import com.stockFlow.stockflow_api.products.dto.ProductResponseAll;
+import com.stockFlow.stockflow_api.products.exception.ProductNotFoundException;
 import com.stockFlow.stockflow_api.products.mapper.ProductMapper;
 
 import jakarta.transaction.Transactional;
