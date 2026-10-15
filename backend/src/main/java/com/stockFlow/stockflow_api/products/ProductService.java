@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.stockFlow.stockflow_api.products.dto.CreateProductRequest;
 import com.stockFlow.stockflow_api.products.dto.ProductResponse;
 import com.stockFlow.stockflow_api.products.dto.ProductResponseAll;
-import com.stockFlow.stockflow_api.products.exception.ProductNotFoundException;
 import com.stockFlow.stockflow_api.products.mapper.ProductMapper;
 
 import jakarta.transaction.Transactional;
@@ -24,7 +23,6 @@ public class ProductService {
     }
 
     public List<ProductResponseAll> findAll() {
-        System.out.println("chegou aqui");
         return productRepository.findAll().stream().map(productMapper::toDtoAll).toList();
     }
 
@@ -43,7 +41,7 @@ public class ProductService {
             return productMapper.toDto(saved);
 
         } catch (Exception e) {
-            throw new IllegalStateException("Erro ao criar transferencia");
+            throw new IllegalStateException("Erro ao salvar produto");
         }
     }
 
