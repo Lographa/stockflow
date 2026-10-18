@@ -16,4 +16,10 @@ public class ProductExceptionHandler {
                 .body(new ErrorResponseDTO("produto não encontrado", ex.getMessage()));
     }
 
+    @ExceptionHandler(SameProductException.class)
+    public ResponseEntity<ErrorResponseDTO> handleSameProduct(SameProductException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponseDTO("Produto já cadastrado com nome ou sku", ex.getMessage()));
+    }
+
 }

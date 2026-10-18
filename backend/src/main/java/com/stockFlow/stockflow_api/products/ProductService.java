@@ -1,8 +1,6 @@
 package com.stockFlow.stockflow_api.products;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 import com.stockFlow.stockflow_api.movements.Movements;
@@ -14,6 +12,7 @@ import com.stockFlow.stockflow_api.products.dto.CreateProductRequest;
 import com.stockFlow.stockflow_api.products.dto.ProductResponse;
 import com.stockFlow.stockflow_api.products.dto.ProductResponseAll;
 import com.stockFlow.stockflow_api.products.exception.ProductNotFoundException;
+import com.stockFlow.stockflow_api.products.exception.SameProductException;
 import com.stockFlow.stockflow_api.products.mapper.ProductMapper;
 
 import jakarta.transaction.Transactional;
@@ -46,35 +45,31 @@ public class ProductService {
 
     @Transactional
     public ProductResponse createProduct(CreateProductRequest request) {
-        try {
-            Product produto = new Product();
-            produto.setName(request.name());
-            produto.setSku(request.sku());
-            produto.setMin_stock(request.min_stock());
-            produto.setPrice(request.price());
-            produto.setQuantity(request.quantity());
-            produto.setDescription(request.description());
-
-            Product saved = productRepository.save(produto);
-
-            // Optional<Movements> ultimoMovimento = movementsRepository
-            // .findFirstByProductIdAndTypeOrderByCreatedAtDesc(saved.getId(),
-            // MovementTypeEnum.ENTRY);
-
-            Movements movimento = new Movements();
-
-            movimento.setProduct(saved);
-            movimento.setQuantity(request.quantity());
-            movimento.setType(MovementTypeEnum.ENTRY);
-            movimento.setDescription(MovementsDescriptionEnum.ENTRADA.getDescription());
-
-            movementsRepository.save(movimento);
-
-            return productMapper.toDto(saved);
-
-        } catch (Exception e) {
-            throw new IllegalStateException("Erro ao salvar produto");
+        if (productRepository.existsByNameIgnoreCaseOrSkuIgnoreCase(
+                request.name(),
+                request.sku())) {
+            throw new SameProductException(request.name(), request.sku());
         }
+
+        Product produto = new Product();
+        produto.setName(request.name());
+        produto.setSku(request.sku());
+        produto.setMin_stock(request.min_stock());
+        produto.setPrice(request.price());
+        produto.setQuantity(request.quantity());
+        produto.setDescription(request.description());
+
+        Product saved = productRepository.save(produto);
+
+        Movements movimento = new Movements();
+        movimento.setProduct(saved);
+        movimento.setQuantity(request.quantity());
+        movimento.setType(MovementTypeEnum.ENTRY);
+        movimento.setDescription(MovementsDescriptionEnum.ENTRADA.getDescription());
+
+        movementsRepository.save(movimento);
+
+        return productMapper.toDto(saved);
     }
 
 }
