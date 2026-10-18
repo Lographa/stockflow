@@ -21,7 +21,7 @@ public class ProductMapper {
         if (product == null)
             return null;
 
-        return new ProductResponse(product.getId(), product.getName(),
-                product.getSku());
+        return new ProductResponse(product.getId(),
+                product.getSku(), product.getName());
     }
 }

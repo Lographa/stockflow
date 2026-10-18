@@ -11,6 +11,7 @@ import com.stockFlow.stockflow_api.movements.mapper.MovementsMapper;
 import com.stockFlow.stockflow_api.products.dto.CreateProductRequest;
 import com.stockFlow.stockflow_api.products.dto.ProductResponse;
 import com.stockFlow.stockflow_api.products.dto.ProductResponseAll;
+import com.stockFlow.stockflow_api.products.dto.UpdateProductRequest;
 import com.stockFlow.stockflow_api.products.exception.ProductNotFoundException;
 import com.stockFlow.stockflow_api.products.exception.SameProductException;
 import com.stockFlow.stockflow_api.products.mapper.ProductMapper;
@@ -70,6 +71,44 @@ public class ProductService {
         movementsRepository.save(movimento);
 
         return productMapper.toDto(saved);
+    }
+
+    @Transactional
+    public ProductResponse updateProduct(Long id, UpdateProductRequest request) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+
+        if (productRepository.existsByNameIgnoreCaseAndIdNot(request.name(), id)) {
+            throw new SameProductException("Já existe produto cadastrado com esse nome");
+        }
+        if (productRepository.existsBySkuIgnoreCaseAndIdNot(request.sku(), id)) {
+            throw new SameProductException("Já existe produto cadastrado com esse sku");
+        }
+        if (request.sku() != null) {
+            product.setSku(request.sku());
+        }
+
+        if (request.name() != null) {
+            product.setName(request.name());
+        }
+
+        if (request.description() != null) {
+            product.setDescription(request.description());
+        }
+
+        if (request.price() != null) {
+            product.setPrice(request.price());
+        }
+
+        if (request.quantity() != null) {
+            product.setQuantity(request.quantity());
+        }
+
+        if (request.min_stock() != null) {
+            product.setMin_stock(request.min_stock());
+        }
+
+        return productMapper.toDto(productRepository.save(product));
     }
 
 }
