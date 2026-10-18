@@ -23,6 +23,7 @@ public class Product {
     @Column()
     private String name;
 
+    @Column()
     private String description;
 
     @NotNull(message = "O preço é obrigatório")
@@ -31,8 +32,10 @@ public class Product {
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal price;
 
+    @Column()
     private int quantity;
 
+    @Column()
     private int min_stock;
 
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
