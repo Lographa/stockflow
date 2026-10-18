@@ -11,6 +11,7 @@ import com.stockFlow.stockflow_api.movements.mapper.MovementsMapper;
 import com.stockFlow.stockflow_api.products.dto.CreateProductRequest;
 import com.stockFlow.stockflow_api.products.dto.ProductResponse;
 import com.stockFlow.stockflow_api.products.dto.ProductResponseAll;
+import com.stockFlow.stockflow_api.products.dto.ProductSearchFilter;
 import com.stockFlow.stockflow_api.products.dto.UpdateProductRequest;
 import com.stockFlow.stockflow_api.products.exception.ProductNotFoundException;
 import com.stockFlow.stockflow_api.products.exception.SameProductException;
@@ -109,6 +110,27 @@ public class ProductService {
         }
 
         return productMapper.toDto(productRepository.save(product));
+    }
+
+    @Transactional
+    public String deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new ProductNotFoundException(id);
+        }
+
+        List<Movements> movimentos = movementsRepository.findByProductId(id);
+        movementsRepository.deleteAll(movimentos);
+        movementsRepository.flush();
+        productRepository.deleteById(id);
+
+        return "Produto deletado com sucesso";
+    }
+
+    public List<ProductResponseAll> search(ProductSearchFilter filter) {
+        return productRepository.findAll(ProductSpecifications.from(filter))
+                .stream()
+                .map(productMapper::toDtoAll)
+                .toList();
     }
 
 }
