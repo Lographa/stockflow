@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.stockFlow.stockflow_api.movements.enums.MovementTypeEnum;
 import com.stockFlow.stockflow_api.products.Product;
 
 import jakarta.persistence.*;
@@ -36,7 +37,7 @@ public class Movements {
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     public Movements() {
     }

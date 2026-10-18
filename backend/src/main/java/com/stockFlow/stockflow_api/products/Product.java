@@ -2,6 +2,10 @@ package com.stockFlow.stockflow_api.products;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.stockFlow.stockflow_api.movements.Movements;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -43,6 +47,9 @@ public class Product {
 
     @Column(name = "updated_at", nullable = false, insertable = false, updatable = false)
     private LocalDateTime updated_at;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<Movements> movements = new ArrayList<>();
 
     public Product() {
 
