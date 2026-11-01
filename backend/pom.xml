@@ -91,6 +91,26 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!--
+			QA-03 / T-10 / D-5 — integração com MySQL real (somente escopo test; versões geridas
+			pelo BOM do Spring Boot 4.1.1, que traz Testcontainers 2.0.5, compatível com Docker
+			Engine 29 / API 1.52 — as séries 1.x falham com Docker >= 29).
+		-->
+		<dependency>
+			<!-- MySQLContainer (MySQL 8.4 real; o database/init.sql é aplicado como schema). Traz o
+			     testcontainers core (docker-java 3.7.1). A ligação com o Spring é feita por
+			     @DynamicPropertySource, por isso spring-boot-testcontainers não é necessário. -->
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers-mysql</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<!-- Extensão JUnit 5 (@Testcontainers/@Container), usada pelo teste da migração 001
+			     que sobe um container próprio e isolado do contexto principal. -->
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers-junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

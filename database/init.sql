@@ -25,6 +25,11 @@ CREATE TABLE IF NOT EXISTS products (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP,
+    -- Soft delete: NULL = ativo; preenchido = excluido logicamente (linha nunca e removida)
+    deleted_at TIMESTAMP NULL DEFAULT NULL,
+
+    -- Nome unico, inclusive contra produtos excluidos logicamente (D-6)
+    CONSTRAINT uk_products_name UNIQUE (name),
 
     CONSTRAINT chk_product_price
         CHECK (price >= 0),

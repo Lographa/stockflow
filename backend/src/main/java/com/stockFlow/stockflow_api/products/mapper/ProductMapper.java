@@ -8,20 +8,43 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProductMapper {
+
     public ProductResponseAll toDtoAll(Product product) {
         if (product == null)
             return null;
 
-        return new ProductResponseAll(product.getId(), product.getName(),
-                product.getSku(), product.getDescription(), product.getPrice(),
-                product.getMin_stock(), product.getQuantity(), product.getCreated_at(), product.getUpdated_at());
+        return new ProductResponseAll(
+                product.getId(),
+                product.getSku(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getQuantity(),
+                product.getMin_stock(),
+                isLowStock(product),
+                product.getCreated_at(),
+                product.getUpdated_at());
     }
 
     public ProductResponse toDto(Product product) {
         if (product == null)
             return null;
 
-        return new ProductResponse(product.getId(), product.getName(),
-                product.getSku());
+        return new ProductResponse(
+                product.getId(),
+                product.getSku(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getQuantity(),
+                product.getMin_stock(),
+                isLowStock(product),
+                product.getCreated_at(),
+                product.getUpdated_at());
+    }
+
+    /** Estoque baixo: quantity < min_stock (única fonte desta regra no backend). */
+    private boolean isLowStock(Product product) {
+        return product.getQuantity() < product.getMin_stock();
     }
 }
