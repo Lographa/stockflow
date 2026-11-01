@@ -15,6 +15,9 @@ public final class ProductSpecifications {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            // Soft delete: a busca só enxerga produtos ativos.
+            predicates.add(cb.isNull(root.get("deletedAt")));
+
             if (f.ids() != null && !f.ids().isEmpty()) {
                 predicates.add(root.get("id").in(f.ids()));
             }
@@ -32,6 +35,11 @@ public final class ProductSpecifications {
                 Predicate inSku = cb.like(cb.lower(root.get("sku")), pattern);
                 Predicate inDesc = cb.like(cb.lower(root.get("description")), pattern);
                 predicates.add(cb.or(inName, inSku, inDesc));
+            }
+
+            // Estoque baixo: quantity < min_stock (só aplica quando lowStock=true).
+            if (Boolean.TRUE.equals(f.lowStock())) {
+                predicates.add(cb.lessThan(root.<Integer>get("quantity"), root.<Integer>get("min_stock")));
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));
